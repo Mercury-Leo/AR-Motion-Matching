@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -42,7 +39,6 @@ public class HumanBodyTracking : MonoBehaviour
         {
             bodyJoints = new Dictionary<JointIndices3D, Transform>
             {
-                //Sets joints for AR sekleton body.
                 { JointIndices3D.Head, GetNewJointPrefab(arBodyT) },
                 { JointIndices3D.Neck1, GetNewJointPrefab(arBodyT) },
                 { JointIndices3D.LeftArm, GetNewJointPrefab(arBodyT) },
