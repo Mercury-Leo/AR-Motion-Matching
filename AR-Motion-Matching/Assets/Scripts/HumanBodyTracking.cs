@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -33,10 +33,18 @@ public class HumanBodyTracking : MonoBehaviour
             humanBodyManager.humanBodiesChanged -= OnHumanBodiesChanged;
     }
 
+
+    private void compareBody(Transform arBodyT)
+    {
+        
+    }
+
+    //Sets joints for the ARbody.
     private void InitialiseObjects(Transform arBodyT)
     {
         if (bodyJoints == null)
         {
+            //Sets the prefab to all the arbody joints.
             bodyJoints = new Dictionary<JointIndices3D, Transform>
             {
                 { JointIndices3D.Head, GetNewJointPrefab(arBodyT) },
@@ -55,7 +63,7 @@ public class HumanBodyTracking : MonoBehaviour
                 { JointIndices3D.RightFoot, GetNewJointPrefab(arBodyT) }
             };
 
-            // Create line renderers
+            // Creates lines between the prefabs.
             lineRenderers = new LineRenderer[]
             {
                 Instantiate(lineRendererPrefab).GetComponent<LineRenderer>(), // head neck
@@ -81,6 +89,7 @@ public class HumanBodyTracking : MonoBehaviour
         }
     }
 
+    
     private Transform GetNewJointPrefab(Transform arBodyT)
     {
         return Instantiate(jointPrefab, arBodyT).transform;
@@ -100,7 +109,7 @@ public class HumanBodyTracking : MonoBehaviour
 
         /// Update joint placement
         NativeArray<XRHumanBodyJoint> joints = arBody.joints;
-        if (!joints.IsCreated) return;
+        if(!joints.IsCreated) return;
 
         /// Update placement of all joints
         foreach (KeyValuePair<JointIndices3D, Transform> item in bodyJoints)
@@ -113,6 +122,8 @@ public class HumanBodyTracking : MonoBehaviour
         {
             lineRenderers[i].SetPositions(lineRendererTransforms[i]);
         }
+
+        compareBody(arBodyT);
     }
 
     private void UpdateJointTransform(Transform jointT, XRHumanBodyJoint bodyJoint)

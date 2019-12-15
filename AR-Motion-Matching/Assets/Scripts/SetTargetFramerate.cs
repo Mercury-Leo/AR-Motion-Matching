@@ -7,30 +7,30 @@ using UnityEngine;
 /// </summary>
 public class SetTargetFramerate : MonoBehaviour
 {
-	[SerializeField]
-	[Tooltip("Sets the application's target frame rate.")]
-	int m_TargetFrameRate = 60;
+    [SerializeField]
+    [Tooltip("Sets the application's target frame rate.")]
+    int m_TargetFrameRate = 60;
 
-	/// <summary>
-	/// Get or set the application's target frame rate.
-	/// </summary>
-	public int targetFrameRate
-	{
-		get { return m_TargetFrameRate; }
-		set
-		{
-			m_TargetFrameRate = value;
-			SetFrameRate();
-		}
-	}
+    /// <summary>
+    /// Get or set the application's target frame rate.
+    /// </summary>
+    public int targetFrameRate
+    {
+        get { return m_TargetFrameRate; }
+        set
+        {
+            m_TargetFrameRate = value;
+            SetFrameRate();
+        }
+    }
 
-	void SetFrameRate()
-	{
-		Application.targetFrameRate = targetFrameRate;
-	}
+    void SetFrameRate()
+    {
+        Application.targetFrameRate = targetFrameRate;
+    }
 
-	void Start()
-	{
-		SetFrameRate();
-	}
+    void Start()
+    {
+        SetFrameRate();
+    }
 }
