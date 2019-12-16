@@ -8,14 +8,11 @@ using System.Runtime.Serialization;
 
 public class Data_Handler : MonoBehaviour
 {
-
-	public Transform curr_body;
 	string device_path;
 	private int frames = 0;
 	DateTime current_time;
-    string[] rowDataTemp = new string[4];
+    string[] rowDataTemp = new string[5];
     private List<string[]> rowData = new List<string[]>();
-    private Body_Position body_Position;
 
 	// Start is called before the first frame update
 	void Start()
@@ -33,7 +30,7 @@ public class Data_Handler : MonoBehaviour
 		frames++;
 		if (frames % 30 == 0)
 		{
-            Write_CSV();
+           Write_CSV();
            frames = 0;
         }
 
@@ -44,9 +41,10 @@ public class Data_Handler : MonoBehaviour
 	void Create_CSV()
 	{
         rowDataTemp[0] = "Time";
-        rowDataTemp[1] = "X_cords";
-        rowDataTemp[2] = "Y_cords";
-        rowDataTemp[3] = "Z_cords";
+        rowDataTemp[1] = "Head_cords";
+        rowDataTemp[2] = "Neck_cords";
+        rowDataTemp[3] = "LeftArm_cords";
+        rowDataTemp[4] = "RightArm_cords";
         rowData.Add(rowDataTemp);
 
 		StreamWriter outStream = File.CreateText(device_path);
@@ -60,21 +58,54 @@ public class Data_Handler : MonoBehaviour
 
     void Write_CSV()
 	{
-        Transform body = curr_body;
-
         current_time = DateTime.Now;
 
-		rowDataTemp = new string[4];
+        Vector3 Head_vec = Vector3.zero;
+        Vector3 Neck_vec = Vector3.zero;
+        Vector3 LeftArm_vec = Vector3.zero;
+        Vector3 RightArm_vec = Vector3.zero;
 
-        Vector3 a = curr_body.position;
-        Vector3 b = curr_body.position;
+        if (HumanBodyTracking.bodyJoints != null)
+        {
+            foreach (KeyValuePair<JointIndices3D, Transform> item in HumanBodyTracking.bodyJoints)
+            {
 
-        body_Position = Body_Position.CreateComponent(gameObject, current_time, a, b, a, b);
+                switch (item.Key)
+                {
+                    case JointIndices3D.Head:
+                        {
+                            Head_vec = item.Value.position;
+                            break;
+                        }
+                    case JointIndices3D.Neck1:
+                        {
+                            Neck_vec = item.Value.position;
+                            break;
+                        }
+                    case JointIndices3D.LeftArm:
+                        {
+                            LeftArm_vec = item.Value.position;
+                            break;
+                        }
+                    case JointIndices3D.RightArm:
+                        {
+                            RightArm_vec = item.Value.position;
+                            break;
+                        }
+                    default: break;
+                }
 
-        rowDataTemp[0] = body_Position.Time.ToString();
-        rowDataTemp[1] = body_Position.head.Head_X_cords.ToString();
-        rowDataTemp[2] = body_Position.head.Head_Y_cords.ToString();
-        rowDataTemp[3] = body_Position.head.Head_Z_cords.ToString();
+
+            }
+        }
+
+
+        rowDataTemp = new string[5];
+        rowDataTemp[0] = current_time.ToString();
+        rowDataTemp[1] = Head_vec.ToString();
+        rowDataTemp[2] = Neck_vec.ToString();
+        rowDataTemp[3] = LeftArm_vec.ToString();
+        rowDataTemp[4] = RightArm_vec.ToString();
         rowData.Add(rowDataTemp);
 
 		string[][] output = new string[rowData.Count][];

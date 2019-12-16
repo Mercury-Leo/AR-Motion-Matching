@@ -1,5 +1,5 @@
 ﻿// 3D joint skeleton
-enum JointIndices3D
+public enum JointIndices3D
 {
     Invalid = -1,
     Root = 0, // parent: <none> [-1]

@@ -14,7 +14,9 @@ public class HumanBodyTracking : MonoBehaviour
 
     [SerializeField] private GameObject lineRendererPrefab;
 
-    private Dictionary<JointIndices3D, Transform> bodyJoints;
+    public static HumanBodyTracking HT;
+
+    public static Dictionary<JointIndices3D, Transform> bodyJoints;
 
     private LineRenderer[] lineRenderers;
     private Transform[][] lineRendererTransforms;
