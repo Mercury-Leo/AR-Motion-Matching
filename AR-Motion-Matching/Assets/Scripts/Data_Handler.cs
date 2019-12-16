@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Text;
 using System;
+using System.Runtime.Serialization;
 
 public class Data_Handler : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Data_Handler : MonoBehaviour
 	DateTime current_time;
     string[] rowDataTemp = new string[4];
     private List<string[]> rowData = new List<string[]>();
+    private Body_Position body_Position;
 
 	// Start is called before the first frame update
 	void Start()
@@ -41,11 +43,6 @@ public class Data_Handler : MonoBehaviour
 
 	void Create_CSV()
 	{
-		if (File.Exists(device_path))
-		{
-			File.Delete(device_path);
-		}
-
         rowDataTemp[0] = "Time";
         rowDataTemp[1] = "X_cords";
         rowDataTemp[2] = "Y_cords";
@@ -54,24 +51,31 @@ public class Data_Handler : MonoBehaviour
 
 		StreamWriter outStream = File.CreateText(device_path);
 		outStream.Close();
+        if(!File.Exists(device_path))
+        {   
+            Debug.LogError("Didn't create +" + device_path);
+        }
 
-	}
-
-    private void OnEnable()
-    {
-        
     }
 
     void Write_CSV()
 	{
         Transform body = curr_body;
+
         current_time = DateTime.Now;
+
 		rowDataTemp = new string[4];
-        rowDataTemp[0] = current_time.ToString();
-        rowDataTemp[1] = body.position.x.ToString();
-        rowDataTemp[2] = body.position.y.ToString();
-        rowDataTemp[3] = body.position.z.ToString();
-		rowData.Add(rowDataTemp);
+
+        Vector3 a = curr_body.position;
+        Vector3 b = curr_body.position;
+
+        body_Position = Body_Position.CreateComponent(gameObject, current_time, a, b, a, b);
+
+        rowDataTemp[0] = body_Position.Time.ToString();
+        rowDataTemp[1] = body_Position.head.Head_X_cords.ToString();
+        rowDataTemp[2] = body_Position.head.Head_Y_cords.ToString();
+        rowDataTemp[3] = body_Position.head.Head_Z_cords.ToString();
+        rowData.Add(rowDataTemp);
 
 		string[][] output = new string[rowData.Count][];
 
@@ -96,27 +100,20 @@ public class Data_Handler : MonoBehaviour
         rowData.Clear();
 	}
 
-	public class tester
-	{
-		public DateTime Time { get; set; }
-		public string X_cords { get; set; }
-		public string Y_cords { get; set; }
-		public string Z_cords { get; set; }
-    }
+    
 
-
-	private string getPath()
+    private string getPath()
 	{
+        string body_location = "Saved_data" + DateTime.Now.ToString("dd_MM_yy_HH_mm_ss") + ".csv";
 #if UNITY_EDITOR
-            return Path.Combine(Application.dataPath, "DataFiles", "Saved_data.csv");
+        return Path.Combine(Application.dataPath, "DataFiles", body_location);
 #elif UNITY_ANDROID
-            return Path.Combine(Application.persistentDataPath, "DataFiles", "Saved_data.csv");
+            return Path.Combine(Application.persistentDataPath, "DataFiles", body_location);
 #elif UNITY_IPHONE
-            return Path.Combine(Application.persistentDataPath, "DataFiles", "Saved_data.csv");
+            return Path.Combine(Application.persistentDataPath, "DataFiles", body_location);
 #else
-		    return Path.Combine(Application.dataPath, "DataFiles", "Saved_data.csv");
+		    return Path.Combine(Application.dataPath, "DataFiles", body_location);
 #endif
     }
-
 
 }

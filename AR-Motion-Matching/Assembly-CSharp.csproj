@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Body_Position.cs" />
     <Compile Include="Assets\Scripts\BodyJoints.cs" />
     <Compile Include="Assets\Scripts\Data_Handler.cs" />
     <Compile Include="Assets\Scripts\HumanBodyTracking.cs" />
